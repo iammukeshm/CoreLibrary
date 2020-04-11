@@ -12,10 +12,18 @@ namespace CoreLibrary.Helpers
     public class ApiHelper
     {
         private HttpClient apiClient;
+        /// <summary>
+        /// Constructor for Api Helper
+        /// </summary>
+        /// <param name="baseAddress"></param>
         public ApiHelper(string baseAddress)
         {
             InitializeClient(baseAddress);
         }
+        /// <summary>
+        /// Initialize Api Client with baseAddress
+        /// </summary>
+        /// <param name="baseAddress"></param>
         private void InitializeClient(string baseAddress)
         {
             apiClient = new HttpClient();
@@ -23,6 +31,10 @@ namespace CoreLibrary.Helpers
             apiClient.DefaultRequestHeaders.Accept.Clear();
             apiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
+        /// <summary>
+        /// Add JWT Bearer Token to HttpClient Authorization Header
+        /// </summary>
+        /// <param name="jwtToken"></param>
         public void AddJwtAuthorization(string jwtToken)
         {
             if (!string.IsNullOrEmpty(jwtToken))
@@ -30,11 +42,16 @@ namespace CoreLibrary.Helpers
                 apiClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken);
             }
         }
+        /// <summary>
+        /// Removes the previously set JWT Bearer Token from the HttpClient Header
+        /// </summary>
         public void RemoveJwtAuthorization()
         {
             apiClient.DefaultRequestHeaders.Remove("Authorization");
         }
+
         private readonly int maxRetryAttempts = 3;
+
         private TimeSpan pauseBetweenFailures = TimeSpan.FromSeconds(5);
         public async Task<T> GetAsync<T>(string endPointUrl)
         {
